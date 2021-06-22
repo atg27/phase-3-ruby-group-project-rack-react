@@ -5,7 +5,6 @@ class Application
     req = Rack::Request.new(env) 
     if req.path.match(/test/) 
       return [200, { 'Content-Type' => 'application/json' }, [ {:message => "test response!"}.to_json ]]
-    
     elsif req.path.match(/publications/) 
       if req.env["REQUEST_METHOD"] == "POST"
         input = JSON.parse(req.body.read)
@@ -17,16 +16,16 @@ class Application
         author_id = req.path.split('/authors/').last.split('/publications/').first
         author = Author.find_by(id: author_id)
         publication_id = req.path.split('/publications/').last
-        auth_publication = author.publications.find_by(id: publication_id)
-        auth_publication.destroy()
+        publication = author.publications.find_by(id: publication_id)
+        publication.destroy()
       elsif req.env["REQUEST_METHOD"] == "PATCH"
         input = JSON.parse(req.body.read)
         author_id = req.path.split('/authors/').last.split('/publications/').first
         author = Author.find_by(id: author_id)
         publication_id = req.path.split('/publications/').last
-        auth_publication = author.publications.find_by(id: publication_id)
-        auth_publication.update(input)
-        return [200, { 'Content-Type' => 'application/json' }, [ auth_publication.to_json ]]
+        publication = author.publications.find_by(id: publication_id)
+        publication.update(input)
+        return [200, { 'Content-Type' => 'application/json' }, [ publication.to_json ]]
       end
     elsif req.path.match(/authors/) 
         if req.env["REQUEST_METHOD"] == "POST"
